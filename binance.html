@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Trading Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background-color: #1a1e26;
+            color: #ffffff;
+            padding-bottom: 70px;
+        }
+        
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 16px;
+            background-color: #1a1e26;
+            font-size: 14px;
+        }
+        
+        .status-icons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .header {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            background-color: #1a1e26;
+        }
+        
+        .logo {
+            width: 36px;
+            height: 36px;
+            background-color: #FFC72C;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+        
+        .search-container {
+            flex: 1;
+            background-color: #2a2f38;
+            border-radius: 20px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            margin-right: 12px;
+        }
+        
+        .search-input {
+            background: transparent;
+            border: none;
+            color: #808080;
+            width: 100%;
+            margin-left: 8px;
+            font-size: 14px;
+        }
+        
+        .header-icons {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .notification-badge {
+            position: relative;
+        }
+        
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background-color: #FFC72C;
+            color: #000;
+            border-radius: 10px;
+            padding: 2px 6px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        .total-value {
+            padding: 16px;
+            border-bottom: 1px solid #2a2f38;
+        }
+        
+        .value-label {
+            font-size: 18px;
+            color: #adb5bd;
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .amount {
+            font-size: 36px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .add-funds {
+            background-color: #FFC72C;
+            color: #000;
+            padding: 12px 20px;
+            border-radius: 24px;
+            font-weight: bold;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .quick-actions {
+            display: flex;
+            justify-content: space-between;
+            padding: 16px;
+            border-bottom: 1px solid #2a2f38;
+        }
+        
+        .action {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 70px;
+        }
+        
+        .action-icon {
+            width: 50px;
+            height: 50px;
+            background-color: #2a2f38;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+        
+        .action-label {
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .tabs {
+            display: flex;
+            padding: 16px;
+            border-bottom: 1px solid #2a2f38;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        
+        .tab {
+            margin-right: 24px;
+            padding-bottom: 4px;
+            color: #adb5bd;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        
+        .tab.active {
+            color: #ffffff;
+            border-bottom: 3px solid #FFC72C;
+        }
+        
+        .sub-tabs {
+            display: flex;
+            padding: 12px 16px;
+            gap: 16px;
+            border-bottom: 1px solid #2a2f38;
+        }
+        
+        .sub-tab {
+            padding: 6px 16px;
+            background-color: #2a2f38;
+            border-radius: 16px;
+            font-size: 14px;
+            color: #adb5bd;
+            cursor: pointer;
+        }
+        
+        .sub-tab.active {
+            color: #ffffff;
+        }
+        
+        .table-header {
+            display: flex;
+            padding: 16px;
+            border-bottom: 1px solid #2a2f38;
+            color: #adb5bd;
+            font-size: 14px;
+        }
+        
+        .name-col {
+            flex: 1;
+        }
+        
+        .price-col {
+            flex: 1;
+            text-align: right;
+        }
+        
+        .change-col {
+            width: 100px;
+            text-align: right;
+        }
+        
+        .crypto-row {
+            display: flex;
+            padding: 16px;
+            border-bottom: 1px solid #2a2f38;
+            align-items: center;
+        }
+        
+        .crypto-name {
+            flex: 1;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .crypto-price {
+            flex: 1;
+            text-align: right;
+        }
+        
+        .price-main {
+            font-size: 18px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        
+        .price-usd {
+            font-size: 14px;
+            color: #adb5bd;
+        }
+        
+        .change-percent {
+            width: 100px;
+            text-align: center;
+            background-color: #00c087;
+            color: #fff;
+            padding: 8px;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #1a1e26;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid #2a2f38;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #808080;
+            font-size: 12px;
+        }
+        
+        .nav-item.active {
+            color: #ffffff;
+        }
+        
+        .dropdown {
+            margin-left: 6px;
+            margin-top: 2px;
+        }
+        
+        .menu-icon {
+            margin-left: 16px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Status Bar -->
+  
+    
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 9l6 6 6-6"></path>
+            </svg>
+        </div>
+        <div class="search-container">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#808080" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <span class="search-input">#EthereumSecurityI...</span>
+        </div>
+        <div class="header-icons">
+            <div class="notification-badge">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                <span class="badge">99+</span>
+            </div>
+            <div>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Total Value -->
+    <div class="total-value">
+        <div class="value-label">
+            Est. Total Value (USD)
+            <svg class="dropdown" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#adb5bd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 9l6 6 6-6"></path>
+            </svg>
+        </div>
+        <div class="amount">
+            <span>$1007.21</span>
+            <button class="add-funds">Add Funds</button>
+        </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <div class="action">
+            <div class="action-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFC72C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
+            </div>
+            <div class="action-label">Pizza Day</div>
+        </div>
+        <div class="action">
+            <div class="action-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+            </div>
+            <div class="action-label">Rewards Hub</div>
+        </div>
+        <div class="action">
+            <div class="action-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFC72C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </div>
+            <div class="action-label">Earn</div>
+        </div>
+        <div class="action">
+            <div class="action-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="8.5" cy="7" r="4"></circle>
+                    <line x1="20" y1="8" x2="20" y2="14"></line>
+                    <line x1="23" y1="11" x2="17" y2="11"></line>
+                </svg>
+            </div>
+            <div class="action-label">Referral</div>
+        </div>
+        <div class="action">
+            <div class="action-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFC72C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+            </div>
+            <div class="action-label">More</div>
+        </div>
+    </div>
+    
+    <!-- Tabs -->
+    <div class="tabs">
+        <div class="tab">Favorites</div>
+        <div class="tab">Hot</div>
+        <div class="tab">Alpha</div>
+        <div class="tab">New</div>
+        <div class="tab active">Gainers</div>
+        <div class="tab menu-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </div>
+    </div>
+    
+    <!-- Sub Tabs -->
+    <div class="sub-tabs">
+        <div class="sub-tab active">Crypto</div>
+        <div class="sub-tab">Spot</div>
+        <div class="sub-tab">Futures</div>
+    </div>
+    
+    <!-- Table Header -->
+    <div class="table-header">
+        <div class="name-col">Name</div>
+        <div class="price-col">Last Price</div>
+        <div class="change-col">24h chg%</div>
+    </div>
+    
+    <!-- Crypto List -->
+    <div class="crypto-list" id="crypto-list">
+        <div class="crypto-row">
+            <div class="crypto-name">ACM</div>
+            <div class="crypto-price">
+                <div class="price-main" data-base="1.172">1.172</div>
+                <div class="price-usd" data-base="1.17">$1.17</div>
+            </div>
+            <div class="change-percent" data-base="32.43">+32.43%</div>
+        </div>
+        
+        <div class="crypto-row">
+            <div class="crypto-name">HIFI</div>
+            <div class="crypto-price">
+                <div class="price-main" data-base="0.1350">0.1350</div>
+                <div class="price-usd" data-base="0.135">$0.135</div>
+            </div>
+            <div class="change-percent" data-base="22.62">+22.62%</div>
+        </div>
+        
+        <div class="crypto-row">
+            <div class="crypto-name">PORTAL</div>
+            <div class="crypto-price">
+                <div class="price-main" data-base="0.0670">0.0670</div>
+                <div class="price-usd" data-base="0.067">$0.067</div>
+            </div>
+            <div class="change-percent" data-base="19.22">+19.22%</div>
+        </div>
+        
+        <div class="crypto-row">
+            <div class="crypto-name">OG</div>
+            <div class="crypto-price">
+                <div class="price-main" data-base="5.390">5.390</div>
+                <div class="price-usd" data-base="5.39">$5.39</div>
+            </div>
+            <div class="change-percent" data-base="11.99">+11.99%</div>
+        </div>
+        
+        <div class="crypto-row">
+            <div class="crypto-name">PUNDIX</div>
+            <div class="crypto-price">
+                <div class="price-main" data-base="0.4587">0.4587</div>
+                <div class="price-usd" data-base="0.4587">$0.4587</div>
+            </div>
+            <div class="change-percent" data-base="11.15">+11.15%</div>
+        </div>
+        
+        <div class="crypto-row">
+            <div class="crypto-name">SYRUP</div>
+            <div class="crypto-price">
+                <div class="price-main" data-base="0.3490">0.3490</div>
+                <div class="price-usd" data-base="0.349">$0.349</div>
+            </div>
+            <div class="change-percent" data-base="10.86">+10.86%</div>
+        </div>
+    </div>
+    
+    <script>
+        // Function to update crypto prices with small random movements
+        function updateCryptoPrices() {
+            const priceElements = document.querySelectorAll('.price-main');
+            const usdElements = document.querySelectorAll('.price-usd');
+            const changeElements = document.querySelectorAll('.change-percent');
+            
+            priceElements.forEach((element, index) => {
+                // Get base value from data attribute
+                const baseValue = parseFloat(element.getAttribute('data-base'));
+                // Generate small random fluctuation (-0.5% to +0.5%)
+                const fluctuation = (Math.random() - 0.5) * 0.01;
+                // Calculate new value
+                let newValue = baseValue * (1 + fluctuation);
+                
+                // Format according to original precision
+                const originalText = element.getAttribute('data-base');
+                const decimalPlaces = (originalText.split('.')[1] || '').length;
+                const formattedValue = newValue.toFixed(decimalPlaces);
+                
+                // Update the display with a subtle animation
+                if (parseFloat(formattedValue) > baseValue) {
+                    element.style.color = '#00c087';
+                    setTimeout(() => { element.style.color = '#ffffff'; }, 800);
+                } else if (parseFloat(formattedValue) < baseValue) {
+                    element.style.color = '#f6465d';
+                    setTimeout(() => { element.style.color = '#ffffff'; }, 800);
+                }
+                
+                element.textContent = formattedValue;
+                
+                // Update USD value as well
+                const usdElement = usdElements[index];
+                const baseUsdValue = parseFloat(usdElement.getAttribute('data-base'));
+                const newUsdValue = baseUsdValue * (1 + fluctuation);
+                usdElement.textContent = '$' + newUsdValue.toFixed((usdElement.getAttribute('data-base').split('.')[1] || '').length);
+            });
+        }
+        
+        // Update prices at random intervals between 1-3 seconds
+        function scheduleUpdate() {
+            const delay = 1000 + Math.random() * 2000;
+            setTimeout(() => {
+                updateCryptoPrices();
+                scheduleUpdate();
+            }, delay);
+        }
+        
+        // Start the updates
+        scheduleUpdate();
+    </script>
+    
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="nav-item active">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <div>Home</div>
+        </div>
+        
+        <div class="nav-item">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#808080" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            <div>Markets</div>
+        </div>
+        
+        <div class="nav-item">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#808080" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <div>Trade</div>
+        </div>
+        
+        <div class="nav-item">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#808080" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                <line x1="8" y1="21" x2="16" y2="21"></line>
+                <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+            <div>Futures</div>
+        </div>
+        
+        <div class="nav-item">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#808080" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <div>Assets</div>
+        </div>
+    </div>
+    
+    <!-- Bottom Tabs -->
+    <div class="tabs" style="position: fixed; bottom: 70px; left: 0; right: 0; background-color: #1a1e26; border-top: 1px solid #2a2f38;">
+        <div class="tab">Discover</div>
+        <div class="tab">Following</div>
+        <div class="tab">News</div>
+        <div class="tab">Announce</div>
+        <svg class="dropdown" style="margin-left: auto; margin-right: 16px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 15l-6-6-6 6"></path>
+        </svg>
+    </div>
+</body>
+</html>
+    </script>
+    
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="nav-item active">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <div>Home</div>
+        </div>
+        
+        <div class="nav-item">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#808080" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            <div>Markets</div>
+        </div>
+        
+        <div class="nav-item">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#808080" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <div>Trade</div>
+        </div>
+        
+        <div class="nav-item">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#808080" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                <line x1="8" y1="21" x2="16" y2="21"></line>
+                <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+            <div>Futures</div>
+        </div>
+        
+        <div class="nav-item">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#808080" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <div>Assets</div>
+        </div>
+    </div>
+    
+    <!-- Bottom Tabs -->
+    <div class="tabs" style="position: fixed; bottom: 70px; left: 0; right: 0; background-color: #1a1e26; border-top: 1px solid #2a2f38;">
+        <div class="tab">Discover</div>
+        <div class="tab">Following</div>
+        <div class="tab">News</div>
+        <div class="tab">Announce</div>
+        <svg class="dropdown" style="margin-left: auto; margin-right: 16px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 15l-6-6-6 6"></path>
+        </svg>
+    </div>
+</body>
